@@ -56,7 +56,7 @@
   border: 1px solid $secondary;
   border-top-width: 0;
   width: 100%;
-	z-index: 1;
+	z-index: 102;
 }
 
 .suggestionsList {
@@ -83,7 +83,7 @@
 	padding: 0.1rem 0.5rem;
 }
 
-.suggestionFocused {
+.suggestionHighlighted {
 	background: #E8F2FE;
 }
 

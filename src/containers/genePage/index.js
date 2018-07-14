@@ -13,12 +13,14 @@ import GeneOntologyRibbon from '../../components/geneOntologyRibbon';
 import LoadingPage from '../../components/loadingPage';
 import NotFound from '../../components/notFound';
 import Subsection from '../../components/subsection';
+import AlleleTable from '../../components/alleleTable';
 
 import GenomeFeatureViewer from './genomeFeatureViewer';
 import ExpressionLinks from './expressionLinks';
 
 import SpeciesIcon from '../../components/speciesIcon';
 import DataSourceLink from '../../components/dataSourceLink';
+import PhenotypeTable from './phenotypeTable';
 
 class GenePage extends Component {
 
@@ -75,7 +77,9 @@ class GenePage extends Component {
     const ORTHOLOGY = 'Orthology';
     const DISEASE = 'Disease Associations';
     const EXPRESSION = 'Expression';
-    const SECTIONS = [SUMMARY, SEQUENCE_FEATURE_VIEWER, FUNCTION, ORTHOLOGY, DISEASE, EXPRESSION];
+    const ALLELES = 'Alleles';
+    const PHENOTYPES = 'Phenotypes';
+    const SECTIONS = [SUMMARY, SEQUENCE_FEATURE_VIEWER, FUNCTION, ORTHOLOGY, PHENOTYPES, DISEASE, EXPRESSION, ALLELES];
 
     return (
       <DataPage title={title}>
@@ -89,7 +93,7 @@ class GenePage extends Component {
           <PageHeader entityName={data.symbol} />
 
           <Subsection hideTitle title={SUMMARY}>
-            <BasicGeneInfo geneData={data} />
+            <BasicGeneInfo gene={data} />
           </Subsection>
 
           <Subsection hasData={typeof genomeLocation.start !== 'undefined' && typeof genomeLocation.end !== 'undefined'}
@@ -128,9 +132,13 @@ class GenePage extends Component {
             </Subsection>
           </Subsection>
 
-          <Subsection hasData={(this.props.data.diseases || []).length > 0} title={DISEASE}>
-            <GenePageDiseaseTable data={this.props.data.diseases}
-                                  filename={`${this.props.data.symbol}-Disease-Associations-${date}.tsv`}
+          <Subsection title={PHENOTYPES}>
+            <PhenotypeTable geneId={data.primaryId} />
+          </Subsection>
+
+          <Subsection hasData={(data.diseases || []).length > 0} title={DISEASE}>
+            <GenePageDiseaseTable data={data.diseases}
+                                  filename={`${data.symbol}-Disease-Associations-${date}.tsv`}
             />
           </Subsection>
 
@@ -141,6 +149,13 @@ class GenePage extends Component {
                                .concat(data.crossReferences['gene/wild_type_expression'])
                                .concat(data.crossReferences['gene/spell'])
                              }
+            />
+          </Subsection>
+
+          <Subsection title={ALLELES}>
+            <AlleleTable filename={`${data.symbol}-Alleles-${date}.tsv`}
+                         geneDataProvider={data.dataProvider}
+                         geneId={data.primaryId}
             />
           </Subsection>
         </PageData>

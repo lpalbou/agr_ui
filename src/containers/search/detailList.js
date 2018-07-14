@@ -9,6 +9,7 @@ import {
   AttributeLabel,
   AttributeValue,
 } from '../../components/attribute';
+import NoData from '../../components/noData';
 
 const JOIN_CHAR = ', ';
 const size = 3;
@@ -39,7 +40,7 @@ class DetailList extends Component {
       }
 
       if (!value) {
-        valueNode = <i className='text-muted'>Not Available</i>;
+        valueNode = <NoData>Not Available</NoData>;
       }
 
       let node = {};
