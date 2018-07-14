@@ -1,10 +1,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import style from './style.scss';
+//import style from './style.scss';
 import { makeFieldDisplayName } from '../../lib/searchHelpers';
+import { CollapsibleList } from '../../components/collapsibleList';
+import {
+  AttributeList,
+  AttributeLabel,
+  AttributeValue,
+} from '../../components/attribute';
 
 const JOIN_CHAR = ', ';
+const size = 3;
 
 class DetailList extends Component {
   render() {
@@ -12,31 +19,44 @@ class DetailList extends Component {
     let nodes = this.props.fields.map( (field) => {
       let valueNode;
       let value = d[field];
+
       if (Array.isArray(value)) {
-        value = value.join(JOIN_CHAR);
+        if (field === 'external_ids') { //special handling to make cross references collapsible
+          valueNode = (
+            <CollapsibleList collapsedSize={size}> {value} </CollapsibleList>
+          );
+        } else { //everything else just gets joined
+          value = value.join(JOIN_CHAR);
+        }
       }
 
       if (value && field === 'species') {
         valueNode = <span><i dangerouslySetInnerHTML={{ __html: value }} /></span>;
       } else {
-        valueNode = <span dangerouslySetInnerHTML={{ __html: value }} />;
+        if (field !== 'external_ids') {
+          valueNode = <span dangerouslySetInnerHTML={{ __html: value }} />;
+        }
       }
 
       if (!value) {
         valueNode = <i className='text-muted'>Not Available</i>;
       }
 
-      return (
-        <div className={style.detailLineContainer} key={`srField.${field}`}>
-          <span className={style.detailLabel}><strong>{makeFieldDisplayName(field)}:</strong> </span>
-          <span className={style.detailValue}>{valueNode}</span>
-        </div>
-      );
+      let node = {};
+      node.label = makeFieldDisplayName(field);
+      node.value = valueNode;
+
+      return node;
     });
     return (
-      <div className={style.detailContainer}>
-        {nodes}
-      </div>
+      <AttributeList>
+        {nodes.map((node) => {
+          <div>
+            <AttributeLabel>{node.label}</AttributeLabel>;
+            <AttributeValue>{node.value}</AttributeValue>;
+          </div>;
+        })}
+      </AttributeList>
     );
   }
 }
