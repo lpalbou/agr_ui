@@ -32,7 +32,9 @@ class ReactApp extends Component {
         <Router>
           {
             isBrowser ?
-              <ScrollContext>
+              <ScrollContext
+                shouldUpdateScroll={() => false}
+              >
                 <RouteListener onRouteChange={logPageView}>
                   {routes}
                 </RouteListener>

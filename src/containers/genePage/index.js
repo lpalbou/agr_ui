@@ -26,12 +26,33 @@ class GenePage extends Component {
 
   componentDidMount () {
     this.props.dispatch(fetchGene(this.props.match.params.geneId));
+    setTimeout(() => {
+      console.log('zzz');
+      console.log(this.props.location);
+      console.log(this.props.history);
+      this.context.scrollBehavior.scrollBehavior.updateScroll(null, {
+        location: this.props.location,
+        history: this.props.history,
+      });
+    }, 3000);
   }
 
   componentDidUpdate (prevProps) {
     if (this.props.match.params.geneId !== prevProps.match.params.geneId) {
       this.props.dispatch(fetchGene(this.props.match.params.geneId));
     }
+
+  //  if (this.props.data !== prevProps.data) {
+    setTimeout(() => {
+      console.log('zzz');
+      console.log(this.props.location);
+      console.log(this.props.history);
+      this.context.scrollBehavior.scrollBehavior.updateScroll(null, {
+        location: this.props.location,
+        history: this.props.history,
+      });
+    }, 3000);
+  //  }
   }
 
   render () {
@@ -172,6 +193,10 @@ GenePage.propTypes = {
   match: PropTypes.shape({
     params: PropTypes.object,
   }).isRequired,
+};
+
+GenePage.contextTypes = {
+  scrollBehavior: PropTypes.object.isRequired,
 };
 
 function mapStateToProps (state) {
